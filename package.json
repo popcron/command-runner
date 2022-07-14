@@ -1,0 +1,14 @@
+{
+  "name": "com.popcron.command-runner",
+  "displayName": "Popcron Command Runner",
+  "version": "1.0.0",
+  "description": "A utility that parses text into commands and executes its code.",
+  "keywords": [
+    "console",
+    "parser"
+  ],
+  "author": {
+    "name": "popcron",
+    "url": "https://github.com/popcron"
+  }
+}
