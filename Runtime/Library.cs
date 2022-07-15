@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Popcron.CommandRunner
 {
@@ -17,6 +18,11 @@ namespace Popcron.CommandRunner
             }
         }
 
+        public Library()
+        {
+
+        }
+
         public Library(IEnumerable<IBaseCommand> prefabs)
         {
             foreach (IBaseCommand prefab in prefabs)
@@ -32,7 +38,7 @@ namespace Popcron.CommandRunner
 
         public IBaseCommand GetPrefab(CommandInput input)
         {
-            foreach (var pair in prefabs)
+            foreach (KeyValuePair<CommandInput, IBaseCommand> pair in prefabs)
             {
                 CommandInput path = pair.Key;
                 IBaseCommand prefab = pair.Value;
@@ -43,7 +49,7 @@ namespace Popcron.CommandRunner
                     //return prefab;
                 }
 
-                if (path.Equals(prefab))
+                if (path.Equals(input))
                 {
                     return prefab;
                 }

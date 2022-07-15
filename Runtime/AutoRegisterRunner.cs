@@ -14,15 +14,10 @@ namespace Popcron.CommandRunner
             if (!doneIt)
             {
                 doneIt = true;
-
                 foreach (IBaseCommand command in CommandFinder.FindAllCommands())
                 {
                     SingletonCommandRunner.Instance.Library.Add(command);
                 }
-
-                SingletonCommandRunner.Instance.Run("yo");
-                SingletonCommandRunner.Instance.Run("help");
-                SingletonCommandRunner.Instance.Run("search hel");
             }
         }
 

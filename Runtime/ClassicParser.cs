@@ -7,7 +7,7 @@ namespace Popcron.CommandRunner
     {
         private readonly static Regex parseRegex = new Regex(@"[\""].+?[\""]|[^ ]+");
 
-        public bool TryParse(string text, out CommandInput result)
+        bool IParser.TryParse(string text, out CommandInput result)
         {
             MatchCollection matches = parseRegex.Matches(text);
             List<string> pieces = new List<string>();

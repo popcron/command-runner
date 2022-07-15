@@ -22,7 +22,7 @@ namespace Popcron.CommandRunner
             return new ReadOnlyCollection<IBaseCommand>(commands);
         }
 
-        [Command("yo")]
+        [CommandAttribute("yo")]
         public static void Yo()
         {
             Debug.Log("aye");
@@ -54,6 +54,7 @@ namespace Popcron.CommandRunner
                         CommandAttribute commandAttribute = method.GetCustomAttribute<CommandAttribute>();
                         if (commandAttribute != null)
                         {
+                            commandAttribute.Set(method);
                             commands.Add(commandAttribute);
                         }
                     }

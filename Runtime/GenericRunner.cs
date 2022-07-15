@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace Popcron.CommandRunner
 {
     public class CommandRunner : ICommandRunner
@@ -18,9 +20,9 @@ namespace Popcron.CommandRunner
             if (parser.TryParse(text, out CommandInput path))
             {
                 IBaseCommand prefab = library.GetPrefab(path);
-                Context parameters = new Context(library);
                 if (prefab is ICommand command)
                 {
+                    Context parameters = new Context(library);
                     command.Run(parameters);
                 }
             }

@@ -4,6 +4,8 @@ namespace Popcron.CommandRunner
 {
     public readonly struct CommandInput : IEquatable<CommandInput>
     {
+        private static IParser tempParser = new ClassicParser();
+
         public readonly string[] pieces;
 
         public bool IsEmpty => pieces is null || pieces.Length == 0;
@@ -18,7 +20,7 @@ namespace Popcron.CommandRunner
 
         public CommandInput(string text)
         {
-            new ClassicParser().TryParse(text, out CommandInput result);
+            tempParser.TryParse(text, out CommandInput result);
             this.pieces = result.pieces;
         }
 
@@ -77,8 +79,7 @@ namespace Popcron.CommandRunner
 
         public static implicit operator CommandInput? (string text)
         {
-            ClassicParser parser = new ClassicParser();
-            if (parser.TryParse(text, out CommandInput result))
+            if (tempParser.TryParse(text, out CommandInput result))
             {
                 return result;
             }
@@ -90,8 +91,7 @@ namespace Popcron.CommandRunner
 
         public static explicit operator CommandInput (string text)
         {
-            ClassicParser parser = new ClassicParser();
-            parser.TryParse(text, out CommandInput result);
+            tempParser.TryParse(text, out CommandInput result);
             return result;
         }
     }

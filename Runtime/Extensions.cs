@@ -21,6 +21,41 @@ namespace Popcron.CommandRunner
             return false;
         }
 
+        public static IEnumerable<IBaseCommand> Search(this ILibrary library, string search)
+        {
+            foreach (IBaseCommand prefab in library.Prefabs)
+            {
+                string commandPath = prefab.Path;
+                string typeName = prefab.GetType().FullName;
+                string description = (prefab as IDescription)?.Description;
+                if (search is null || Compare(commandPath, search) || Compare(typeName, search) || Compare(description, search))
+                {
+                    yield return prefab;
+                }
+            }
+
+            bool Compare(string a, string b)
+            {
+                try
+                {
+                    if (a.Contains(b))
+                    {
+                        return true;
+                    }
+                    else if (b.Contains(a))
+                    {
+                        return true;
+                    }
+                }
+                catch
+                {
+
+                }
+
+                return false;
+            }
+        }
+
         public static int GetParameterCount(this IBaseCommand command)
         {
             Type type = command.GetType();
