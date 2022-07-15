@@ -14,10 +14,10 @@ namespace Popcron.CommandRunner
 
     public interface ILibrary
     {
-        IEnumerable<ICommand> Prefabs { get; }
+        IEnumerable<IBaseCommand> Prefabs { get; }
 
-        ICommand GetPrefab(CommandInput path);
-        void Add(ICommand prefab);
+        IBaseCommand GetPrefab(CommandInput path);
+        void Add(IBaseCommand prefab);
         void Clear();
     }
 

@@ -17,9 +17,12 @@ namespace Popcron.CommandRunner
         {
             if (parser.TryParse(text, out CommandInput path))
             {
+                IBaseCommand prefab = library.GetPrefab(path);
                 Context parameters = new Context(library);
-                ICommand prefab = library.GetPrefab(path);
-                prefab.Run(parameters);
+                if (prefab is ICommand command)
+                {
+                    command.Run(parameters);
+                }
             }
         }
     }

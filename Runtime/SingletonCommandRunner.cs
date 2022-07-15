@@ -12,19 +12,19 @@ namespace Popcron.CommandRunner
             {
                 if (runner is null)
                 {
-                    Initialize();
+                    runner = CreateSingletonRunner();
                 }
 
                 return runner;
             }
         }
 
-        private static void Initialize()
+        private static CommandRunner CreateSingletonRunner()
         {
-            IEnumerable<ICommand> commands = CommandFinder.FindAllCommands();
+            IEnumerable<IBaseCommand> commands = CommandFinder.FindAllCommands();
             ILibrary library = new Library(commands);
             IParser parser = new ClassicParser();
-            runner = new CommandRunner(library, parser);
+            return new CommandRunner(library, parser);
         }
     }
 }

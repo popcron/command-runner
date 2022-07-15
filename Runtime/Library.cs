@@ -4,13 +4,25 @@ namespace Popcron.CommandRunner
 {
     public class Library : ILibrary
     {
-        private List<ICommand> prefabs = new List<ICommand>();
+        private Dictionary<CommandInput, IBaseCommand> prefabs = new Dictionary<CommandInput, IBaseCommand>();
 
-        public IEnumerable<ICommand> Prefabs => prefabs;
-
-        public Library(IEnumerable<ICommand> prefabs)
+        public IEnumerable<IBaseCommand> Prefabs
         {
-            this.prefabs.AddRange(prefabs);
+            get
+            {
+                foreach (var prefab in prefabs)
+                {
+                    yield return prefab.Value;
+                }
+            }
+        }
+
+        public Library(IEnumerable<IBaseCommand> prefabs)
+        {
+            foreach (IBaseCommand prefab in prefabs)
+            {
+                Add(prefab);
+            }
         }
 
         public void Clear()
@@ -18,11 +30,20 @@ namespace Popcron.CommandRunner
             prefabs.Clear();
         }
 
-        public ICommand GetPrefab(CommandInput path)
+        public IBaseCommand GetPrefab(CommandInput input)
         {
-            foreach (ICommand prefab in prefabs)
+            foreach (var pair in prefabs)
             {
-                if (path.Equals(prefab.Path))
+                CommandInput path = pair.Key;
+                IBaseCommand prefab = pair.Value;
+                int parametersGiven = input.Count - path.Count;
+                int parametersExpected = prefab.GetParameterCount();
+                if (parametersGiven == parametersExpected)
+                {
+                    //return prefab;
+                }
+
+                if (path.Equals(prefab))
                 {
                     return prefab;
                 }
@@ -31,17 +52,19 @@ namespace Popcron.CommandRunner
             return null;
         }
 
-        public void Add(ICommand prefab)
+        public void Add(IBaseCommand prefab)
         {
-            foreach (ICommand existingPrefab in prefabs)
+            foreach (var pair in prefabs)
             {
-                if (existingPrefab == prefab)
+                IBaseCommand existingPrefab = pair.Value;
+                if (existingPrefab.Path == prefab.Path && existingPrefab.GetType() == prefab.GetType())
                 {
                     return;
                 }
             }
 
-            prefabs.Add(prefab);
+            CommandInput path = new CommandInput(prefab.Path);
+            prefabs[path] = prefab;
         }
     }
 }

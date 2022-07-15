@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace Popcron.CommandRunner
@@ -16,12 +15,14 @@ namespace Popcron.CommandRunner
             {
                 doneIt = true;
 
-                foreach (ICommand command in CommandFinder.FindAllCommands())
+                foreach (IBaseCommand command in CommandFinder.FindAllCommands())
                 {
                     SingletonCommandRunner.Instance.Library.Add(command);
                 }
 
-                SingletonCommandRunner.Instance.Run("time");
+                SingletonCommandRunner.Instance.Run("yo");
+                SingletonCommandRunner.Instance.Run("help");
+                SingletonCommandRunner.Instance.Run("search hel");
             }
         }
 

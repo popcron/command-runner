@@ -10,19 +10,25 @@ namespace Popcron.CommandRunner
     {
         public const BindingFlags Flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static;
 
-        public static ReadOnlyCollection<ICommand> FindAllCommands()
+        public static ReadOnlyCollection<IBaseCommand> FindAllCommands()
         {
-            List<ICommand> commands = new List<ICommand>();
+            List<IBaseCommand> commands = new List<IBaseCommand>();
             Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
             foreach (Assembly assembly in assemblies)
             {
                 AddCommands(commands, assembly);
             }
 
-            return new ReadOnlyCollection<ICommand>(commands);
+            return new ReadOnlyCollection<IBaseCommand>(commands);
         }
 
-        private static void AddCommands(List<ICommand> commands, Assembly assembly)
+        [Command("yo")]
+        public static void Yo()
+        {
+            Debug.Log("aye");
+        }
+
+        private static void AddCommands(List<IBaseCommand> commands, Assembly assembly)
         {
             Type[] types = assembly.GetTypes();
             foreach (Type type in types)
@@ -30,19 +36,27 @@ namespace Popcron.CommandRunner
                 AutoRegisterAttribute attribute = type.GetCustomAttribute<AutoRegisterAttribute>();
                 if (attribute != null)
                 {
-                    ICommand command = Activator.CreateInstance(type) as ICommand;
+                    IBaseCommand command = Activator.CreateInstance(type) as IBaseCommand;
                     if (command != null)
                     {
-                        SingletonCommandRunner.Instance.Library.Add(command);
+                        commands.Add(command);
                     }
                     else
                     {
-                        Debug.LogError($"Cannot auto register type {type} as a command because it doesnt implement {nameof(ICommand)}");
+                        Debug.LogError($"Cannot auto register type {type} as a command because it doesnt implement {nameof(IBaseCommand)}");
                     }
                 }
                 else
                 {
                     MethodInfo[] methods = type.GetMethods(Flags);
+                    foreach (MethodInfo method in methods)
+                    {
+                        CommandAttribute commandAttribute = method.GetCustomAttribute<CommandAttribute>();
+                        if (commandAttribute != null)
+                        {
+                            commands.Add(commandAttribute);
+                        }
+                    }
                 }
             }
         }

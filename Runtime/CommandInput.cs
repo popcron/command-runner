@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 
 namespace Popcron.CommandRunner
 {
@@ -8,15 +7,18 @@ namespace Popcron.CommandRunner
         public readonly string[] pieces;
 
         public bool IsEmpty => pieces is null || pieces.Length == 0;
+        public int Count => pieces.Length;
+
+        public string this[int index] => pieces[index];
 
         public CommandInput(string[] pieces)
         {
             this.pieces = pieces;
         }
 
-        public CommandInput(string command)
+        public CommandInput(string text)
         {
-            new ClassicParser().TryParse(command, out CommandInput result);
+            new ClassicParser().TryParse(text, out CommandInput result);
             this.pieces = result.pieces;
         }
 
