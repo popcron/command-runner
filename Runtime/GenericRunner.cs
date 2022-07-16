@@ -24,8 +24,8 @@ namespace Popcron.CommandRunner
                 {
                     Context parameters = new Context(library);
                     Result result = new Result();
-                    StringBuilder log = result.Set(command.Run(parameters));
-                    return new Result(result?.Value, log);
+                    result.Set(command.Run(parameters));
+                    return new Result(result.Value, result.Logs);
                 }
             }
 

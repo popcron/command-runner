@@ -1,40 +1,43 @@
-using System.Text;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Popcron.CommandRunner
 {
     public class Result
     {
-        public StringBuilder Log { get; }
+        public List<string> Logs { get; }
+        public bool HasLogs { get; }
         public object Value { get; private set; }
 
         public Result()
         {
             Application.logMessageReceived += LogMessage;
-            Log = new StringBuilder();
+            Logs = new List<string>();
+            HasLogs = true;
         }
 
         public Result(object value)
         {
             this.Value = value;
+            HasLogs = false;
         }
 
-        public Result(object value, StringBuilder log)
+        public Result(object value, List<string> log)
         {
             Value = value;
-            Log = log;
+            Logs = log;
+            HasLogs = true;
         }
 
         private void LogMessage(string message, string stackTrace, LogType type)
         {
-            Log.AppendLine(message);
+            Logs.Add(message);
         }
 
-        public StringBuilder Set(object value)
+        public void Set(object value)
         {
             Value = value;
             Application.logMessageReceived -= LogMessage;
-            return Log;
         }
     }
 }
