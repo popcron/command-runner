@@ -10,5 +10,11 @@
   "author": {
     "name": "popcron",
     "url": "https://github.com/popcron"
-  }
+  },
+  "samples": [
+  {
+    "displayName": "In game console",
+    "description": "Drag and drop the in game console prefab into the scene.",
+    "path": "Samples~/In Game Console"
+  }]
 }
