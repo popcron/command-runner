@@ -23,11 +23,15 @@ namespace Popcron.CommandRunner
             this.member = member;
         }
 
-        void ICommand.Run(Context context)
+        Result ICommand.Run(Context context)
         {
             if (member is MethodBase method)
             {
-                method.Invoke(null, null);
+                return new Result(method.Invoke(null, null));
+            }
+            else
+            {
+                return null;
             }
         }
     }

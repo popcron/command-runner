@@ -9,7 +9,7 @@ namespace Popcron.CommandRunner
         string IBaseCommand.Path => "ls commands";
         string IDescription.Description => "Prints a list of all commands available";
 
-        public void Run(Context parameters)
+        public Result Run(Context parameters)
         {
             StringBuilder sb = new StringBuilder();
             foreach (IBaseCommand command in parameters.Library.Prefabs)
@@ -19,6 +19,7 @@ namespace Popcron.CommandRunner
             }
 
             Debug.Log(sb.ToString());
+            return null;
         }
     }
 }

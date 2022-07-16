@@ -13,8 +13,8 @@ namespace Popcron.CommandRunner
         private const string type = "command";
         private const string displayName = "Commands";
 
-        private static ILibrary Library => SingletonCommandRunner.Instance.Library;
-        private static ICommandRunner Runner => SingletonCommandRunner.Instance;
+        private static ILibrary Library => Singletons.Runner.Library;
+        private static ICommandRunner Runner => Singletons.Runner;
 
         [SearchItemProvider]
         private static SearchProvider CreateProvider()

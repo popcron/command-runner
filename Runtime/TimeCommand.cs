@@ -8,9 +8,10 @@ namespace Popcron.CommandRunner
     {
         public string Path => "time";
 
-        public void Run(Context parameters)
+        public Result Run(Context parameters)
         {
             Debug.Log(DateTime.Now.ToString());
+            return null;
         }
     }
 }

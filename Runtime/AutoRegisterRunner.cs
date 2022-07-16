@@ -16,7 +16,7 @@ namespace Popcron.CommandRunner
                 doneIt = true;
                 foreach (IBaseCommand command in CommandFinder.FindAllCommands())
                 {
-                    SingletonCommandRunner.Instance.Library.Add(command);
+                    Singletons.Runner.Library.Add(command);
                 }
             }
         }

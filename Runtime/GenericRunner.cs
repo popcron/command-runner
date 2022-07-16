@@ -1,4 +1,4 @@
-using UnityEngine;
+using System.Text;
 
 namespace Popcron.CommandRunner
 {
@@ -15,7 +15,7 @@ namespace Popcron.CommandRunner
             this.parser = parser;
         }
 
-        public void Run(string text)
+        public Result Run(string text)
         {
             if (parser.TryParse(text, out CommandInput path))
             {
@@ -23,9 +23,13 @@ namespace Popcron.CommandRunner
                 if (prefab is ICommand command)
                 {
                     Context parameters = new Context(library);
-                    command.Run(parameters);
+                    Result result = new Result();
+                    StringBuilder log = result.Set(command.Run(parameters));
+                    return new Result(result?.Value, log);
                 }
             }
+
+            return null;
         }
     }
 }

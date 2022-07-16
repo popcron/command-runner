@@ -14,9 +14,10 @@ namespace Popcron.CommandRunner
             this.method = method;
         }
 
-        void ICommand.Run(Context context)
+        Result ICommand.Run(Context context)
         {
             method?.Invoke();
+            return null;
         }
     }
 }

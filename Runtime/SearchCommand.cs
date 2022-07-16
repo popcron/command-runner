@@ -9,7 +9,7 @@ namespace Popcron.CommandRunner
         string IBaseCommand.Path => "search";
         string IDescription.Description => "Searches for commands";
 
-        void ICommand<string>.Run(Context parameters, string search)
+        Result ICommand<string>.Run(Context parameters, string search)
         {
             StringBuilder sb = new StringBuilder();
             foreach (IBaseCommand command in parameters.Library.Search(search))
@@ -19,6 +19,7 @@ namespace Popcron.CommandRunner
             }
 
             Debug.Log(sb.ToString());
+            return null;
         }
     }
 }

@@ -5,9 +5,9 @@ namespace Popcron.CommandRunner
     {
         public string Path => "info";
 
-        public void Run(Context parameters)
+        public Result Run(Context parameters)
         {
-            
+            return null;
         }
     }
 }
