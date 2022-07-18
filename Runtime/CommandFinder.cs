@@ -22,7 +22,7 @@ namespace Popcron.CommandRunner
             return new ReadOnlyCollection<IBaseCommand>(commands);
         }
 
-        [CommandAttribute("yo")]
+        [Command("yo")]
         public static void Yo()
         {
             Debug.Log("aye");

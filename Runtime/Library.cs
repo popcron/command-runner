@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Popcron.CommandRunner
 {
@@ -60,7 +59,7 @@ namespace Popcron.CommandRunner
 
         public void Add(IBaseCommand prefab)
         {
-            foreach (var pair in prefabs)
+            foreach (KeyValuePair<CommandInput, IBaseCommand> pair in prefabs)
             {
                 IBaseCommand existingPrefab = pair.Value;
                 if (existingPrefab.Path == prefab.Path && existingPrefab.GetType() == prefab.GetType())

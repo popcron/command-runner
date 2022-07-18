@@ -7,6 +7,28 @@ using UnityEngine.UI;
 
 public class InGameConsole : MonoBehaviour
 {
+    private static InGameConsole instance;
+
+    /// <summary>
+    /// The potential singleton in game console component in the scene.
+    /// </summary>
+    public static InGameConsole Instance
+    {
+        get
+        {
+            if (!instance)
+            {
+                instance = FindObjectOfType<InGameConsole>();
+                if (!instance)
+                {
+                    Debug.LogError($"The InGameConsole component is missing from the scene");
+                }
+            }
+
+            return instance;
+        }
+    }
+
     [SerializeField]
     private Transform window;
 
@@ -23,8 +45,10 @@ public class InGameConsole : MonoBehaviour
     private ConsoleEntry suggestionPrefab;
 
     private List<ConsoleEntry> entries = new List<ConsoleEntry>();
+    private List<string> history = new List<string>();
     private bool isOpen;
     private int selectedEntry;
+    private int selectedHistoricEntry;
 
     public bool IsOpen
     {
@@ -80,23 +104,36 @@ public class InGameConsole : MonoBehaviour
 
     private void OnSubmit(string text)
     {
+        history.Add(text);
+
+        bool wroteAnything = false;
         Result result = Singletons.Runner.Run(text);
-        string output = result?.Log?.ToString();
-        if (!string.IsNullOrEmpty(output))
+        if (result?.HasLogs == true)
         {
             ClearAllEntries();
-            if (output.IndexOf('\n') != -1)
+            foreach (string log in result.Logs)
             {
-                string[] lines = output.Split('\n');
-                foreach (string line in lines)
+                if (log.IndexOf('\n') != -1)
                 {
-                    CreateEntry(line, null);
+                    string[] lines = log.Split('\n');
+                    foreach (string line in lines)
+                    {
+                        CreateEntry(line, null);
+                        wroteAnything = true;
+                    }
+                }
+                else
+                {
+                    CreateEntry(log, null);
+                    wroteAnything = true;
                 }
             }
-            else
-            {
-                CreateEntry(output, null);
-            }
+        }
+
+        if (wroteAnything)
+        {
+            inputField.MoveTextStart(false);
+            inputField.MoveTextEnd(true);
         }
         else
         {
@@ -110,7 +147,6 @@ public class InGameConsole : MonoBehaviour
         if (e.type == EventType.KeyDown)
         {
             KeyCode pressedKey = e.keyCode;
-
             bool wantsToClose = pressedKey == KeyCode.Escape;
             if (wantsToClose && IsOpen)
             {
@@ -123,24 +159,37 @@ public class InGameConsole : MonoBehaviour
                 IsOpen = !IsOpen;
             }
 
-            bool wantsToRefocus = pressedKey == KeyCode.A && e.modifiers.HasFlag(EventModifiers.Control);
-            if (wantsToRefocus)
-            {
-                SelectAndFocus();
-                inputField.MoveTextStart(false);
-                inputField.MoveTextEnd(true);
-            }
-
             if (inputField.isFocused)
             {
-                bool nextSuggestion = pressedKey == KeyCode.Tab || pressedKey == KeyCode.DownArrow;
-                if (nextSuggestion && entries.Count > 0)
+                bool next = pressedKey == KeyCode.Tab || pressedKey == KeyCode.DownArrow;
+                if (next && entries.Count > 0)
                 {
                     selectedEntry = selectedEntry + 1 % entries.Count;
                     previewCommand.enabled = true;
                     previewCommand.text = entries[selectedEntry].Text;
 
                     AutocompleteSuggestion();
+                }
+
+                bool previous = pressedKey == KeyCode.UpArrow;
+                if (previous && history.Count > 0)
+                {
+                    int index = history.Count - selectedHistoricEntry - 1;
+                    if (history.Count > index && index >= 0)
+                    {
+                        Autocomplete(history[index]);
+                        selectedHistoricEntry++;
+                    }
+                }
+            }
+            else
+            {
+                bool wantsToRefocus = pressedKey == KeyCode.A && e.modifiers.HasFlag(EventModifiers.Control);
+                if (wantsToRefocus)
+                {
+                    SelectAndFocus();
+                    inputField.MoveTextStart(false);
+                    inputField.MoveTextEnd(true);
                 }
             }
         }
