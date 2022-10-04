@@ -12,9 +12,16 @@
     "url": "https://github.com/popcron"
   },
   "samples": [
-  {
-    "displayName": "In game console",
-    "description": "Drag and drop the in game console prefab into the scene.",
-    "path": "Samples~/In Game Console"
-  }]
+    {
+      "displayName": "In game console",
+      "description": "Drag and drop the in game console prefab into the scene.",
+      "path": "Samples~/In Game Console"
+    },
+    {
+      "displayName": "Command loader",
+      "description": "Automatically registers ICommand declarations and static methods with a [Command] attribute to the command runner library.",
+      "path": "Samples~/Command Loader"
+    }
+  ],
+  "unity": "2021.1"
 }
