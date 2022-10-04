@@ -18,7 +18,7 @@ namespace Popcron.CommandRunner
 
         public Result(object value)
         {
-            this.Value = value;
+            Value = value;
             HasLogs = false;
         }
 
@@ -38,6 +38,26 @@ namespace Popcron.CommandRunner
         {
             Value = value;
             Application.logMessageReceived -= LogMessage;
+        }
+    }
+
+    public class Result<T> : Result
+    {
+        public new T Value { get; private set; }
+
+        public Result(T value) : base(value)
+        {
+            Value = value;
+        }
+
+        public Result(T value, List<string> log) : base(value, log)
+        {
+            Value = value;
+        }
+
+        public static implicit operator Result<T>(T value)
+        {
+            return new Result<T>(value);
         }
     }
 }

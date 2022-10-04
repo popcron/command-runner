@@ -3,8 +3,7 @@ using UnityEngine;
 
 namespace Popcron.CommandRunner
 {
-    [AutoRegister]
-    public struct SearchCommand : ICommand<string>, IDescription
+    public readonly struct SearchCommand : ICommand<string>, IDescription
     {
         string IBaseCommand.Path => "search";
         string IDescription.Description => "Searches for commands";

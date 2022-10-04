@@ -17,10 +17,9 @@ namespace Popcron.CommandRunner
             }
         }
 
-        public Library()
-        {
+        public static Library Singleton { get; } = new();
 
-        }
+        public Library() { }
 
         public Library(IEnumerable<IBaseCommand> prefabs)
         {

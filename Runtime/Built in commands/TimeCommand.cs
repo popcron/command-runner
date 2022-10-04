@@ -3,8 +3,7 @@ using UnityEngine;
 
 namespace Popcron.CommandRunner
 {
-    [AutoRegister]
-    public struct TimeCommand : ICommand
+    public readonly struct TimeCommand : ICommand
     {
         public string Path => "time";
 

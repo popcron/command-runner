@@ -3,8 +3,7 @@ using UnityEngine;
 
 namespace Popcron.CommandRunner
 {
-    [AutoRegister]
-    public struct ListAllCommands : ICommand, IDescription
+    public readonly struct ListAllCommands : ICommand, IDescription
     {
         string IBaseCommand.Path => "ls commands";
         string IDescription.Description => "Prints a list of all commands available";

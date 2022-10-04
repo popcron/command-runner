@@ -1,7 +1,6 @@
 namespace Popcron.CommandRunner
 {
-    [AutoRegister]
-    public struct InfoCommand : ICommand
+    public readonly struct InfoCommand : ICommand
     {
         public string Path => "info";
 

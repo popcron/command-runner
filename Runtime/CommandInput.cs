@@ -4,8 +4,6 @@ namespace Popcron.CommandRunner
 {
     public readonly struct CommandInput : IEquatable<CommandInput>
     {
-        private static IParser tempParser = new ClassicParser();
-
         public readonly string[] pieces;
 
         public bool IsEmpty => pieces is null || pieces.Length == 0;
@@ -20,8 +18,7 @@ namespace Popcron.CommandRunner
 
         public CommandInput(string text)
         {
-            tempParser.TryParse(text, out CommandInput result);
-            this.pieces = result.pieces;
+            this.pieces = ClassicParser.Parse(text).pieces;
         }
 
         public override string ToString()
@@ -68,7 +65,7 @@ namespace Popcron.CommandRunner
 
         public bool Equals(string text)
         {
-            CommandInput other = (CommandInput)text;
+            CommandInput other = text;
             return Equals(other);
         }
 
@@ -77,22 +74,9 @@ namespace Popcron.CommandRunner
             return HashCode.Combine(pieces);
         }
 
-        public static implicit operator CommandInput? (string text)
+        public static implicit operator CommandInput (string text)
         {
-            if (tempParser.TryParse(text, out CommandInput result))
-            {
-                return result;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        public static explicit operator CommandInput (string text)
-        {
-            tempParser.TryParse(text, out CommandInput result);
-            return result;
+            return ClassicParser.Parse(text);
         }
     }
 }

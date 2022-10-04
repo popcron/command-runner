@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.Search;
-using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace Popcron.CommandRunner
@@ -12,9 +11,6 @@ namespace Popcron.CommandRunner
     {
         private const string type = "command";
         private const string displayName = "Commands";
-
-        private static ILibrary Library => Singletons.Runner.Library;
-        private static ICommandRunner Runner => Singletons.Runner;
 
         [SearchItemProvider]
         private static SearchProvider CreateProvider()
@@ -47,7 +43,7 @@ namespace Popcron.CommandRunner
             foreach (SearchItem item in items)
             {
                 CommandInfo info = (CommandInfo)item.data;
-                Runner.Run(info.path);
+                CommandRunner.Singleton.Run(info.path);
             }
         }
 
@@ -101,7 +97,7 @@ namespace Popcron.CommandRunner
                 yield break;
             }
 
-            foreach (IBaseCommand prefab in Library.Search(context.searchText))
+            foreach (IBaseCommand prefab in Library.Singleton.Search(context.searchText))
             {
                 CommandInfo info = new CommandInfo(prefab);
                 yield return provider.CreateItem(context, prefab.Path, -1, null, null, null, info);
