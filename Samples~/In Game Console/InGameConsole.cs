@@ -12,7 +12,7 @@ public class InGameConsole : MonoBehaviour
     /// <summary>
     /// The potential singleton in game console component in the scene.
     /// </summary>
-    public static InGameConsole Instance
+    public static InGameConsole Singleton
     {
         get
         {
@@ -21,7 +21,7 @@ public class InGameConsole : MonoBehaviour
                 instance = FindObjectOfType<InGameConsole>();
                 if (!instance)
                 {
-                    Debug.LogError($"The InGameConsole component is missing from the scene");
+                    Debug.LogErrorFormat("The {0} component is missing from the scene", typeof(InGameConsole));
                 }
             }
 
@@ -52,10 +52,7 @@ public class InGameConsole : MonoBehaviour
 
     public bool IsOpen
     {
-        get
-        {
-            return window.gameObject.activeSelf;
-        }
+        get => window.gameObject.activeSelf;
         set
         {
             bool isOpen = window.gameObject.activeSelf;
@@ -77,7 +74,12 @@ public class InGameConsole : MonoBehaviour
     {
         inputField.Select();
         inputField.ActivateInputField();
-        EventSystem.current.SetSelectedGameObject(inputField.gameObject, null);
+
+        EventSystem es = EventSystem.current;
+        if (es)
+        {
+            es.SetSelectedGameObject(inputField.gameObject, null);
+        }
     }
 
     private void Awake()
@@ -107,7 +109,7 @@ public class InGameConsole : MonoBehaviour
         history.Add(text);
 
         bool wroteAnything = false;
-        Result result = Singletons.Runner.Run(text);
+        Result result = CommandRunner.Singleton.Run(text);
         if (result?.HasLogs == true)
         {
             ClearAllEntries();
@@ -200,7 +202,7 @@ public class InGameConsole : MonoBehaviour
         ClearAllEntries();
         if (!string.IsNullOrEmpty(newValue))
         {
-            foreach (IBaseCommand prefab in Singletons.Library.Prefabs)
+            foreach (IBaseCommand prefab in Library.Singleton.Prefabs)
             {
                 string text = prefab.Path;
                 if (text.StartsWith(newValue))
