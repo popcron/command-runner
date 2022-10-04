@@ -1,7 +1,7 @@
 # Command Runner
  A library that gives you the tools to parse user text to run commands!
  
-## Quick installation
+# Quick installation
 1. Add this url to your packages manifest:
 ```json
 https://github.com/popcron-games/command-runner.git
@@ -14,7 +14,8 @@ https://github.com/popcron-games/command-runner.git
 3. Drag and drop the `In Game Console` prefab into your scene
 4. Done
 
-### Adding a method as a command
+# Examples
+### Adding a specific method as a command
 ```cs
 ICommand command = new MethodCommand("yo", DoSomething);
 Library.Singleton.Add(command);
@@ -24,7 +25,7 @@ private void DoSomething()
     
 }
 ```
-If it's a static method, then the `[Command]` attribute can be used.
+### Adding a static method with an attribute
 ```cs
 [Command("yo")]
 private static void DoSomething()
@@ -33,7 +34,12 @@ private static void DoSomething()
 }
 ```
 
-### In game console
+### Run a command in code
+```cs
+await CommandRunner.Singleton.RunAsync("yo");
+```
+
+### In game console (from the samples)
 Some basic features:
 1. Toggle it open using the `~` key (the key under `esc`).
 2. Can select previous commands using the up arrow key
