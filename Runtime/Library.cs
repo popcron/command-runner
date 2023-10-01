@@ -1,25 +1,23 @@
+using System;
 using System.Collections.Generic;
 
 namespace Popcron.CommandRunner
 {
+    /// <summary>
+    /// Where commands are stored and found/fetched from.
+    /// </summary>
     public class Library : ILibrary
     {
-        private Dictionary<CommandInput, IBaseCommand> prefabs = new Dictionary<CommandInput, IBaseCommand>();
+        public static Library Singleton { get; } = new Library();
 
-        public IEnumerable<IBaseCommand> Prefabs
+        private readonly HashSet<IBaseCommand> commands = new HashSet<IBaseCommand>();
+
+        public IReadOnlyCollection<IBaseCommand> Commands => commands;
+
+        public Library()
         {
-            get
-            {
-                foreach (var prefab in prefabs)
-                {
-                    yield return prefab.Value;
-                }
-            }
+
         }
-
-        public static Library Singleton { get; } = new();
-
-        public Library() { }
 
         public Library(IEnumerable<IBaseCommand> prefabs)
         {
@@ -31,44 +29,35 @@ namespace Popcron.CommandRunner
 
         public void Clear()
         {
-            prefabs.Clear();
+            commands.Clear();
         }
 
-        public IBaseCommand GetPrefab(CommandInput input)
+        public bool TryGetCommand(ReadOnlySpan<char> path, InputParameters parameters, out IBaseCommand command)
         {
-            foreach (KeyValuePair<CommandInput, IBaseCommand> pair in prefabs)
+            foreach (IBaseCommand existingCommand in commands)
             {
-                CommandInput path = pair.Key;
-                IBaseCommand prefab = pair.Value;
-                int parametersGiven = input.Count - path.Count;
-                int parametersExpected = prefab.GetParameterCount();
-                if (parametersGiven == parametersExpected)
+                if (existingCommand.Path.Equals(path, StringComparison.OrdinalIgnoreCase))
                 {
-                    //return prefab;
-                }
-
-                if (path.Equals(input))
-                {
-                    return prefab;
+                    command = existingCommand;
+                    return true;
                 }
             }
 
-            return null;
+            command = default!;
+            return false;
         }
 
-        public void Add(IBaseCommand prefab)
+        public void Add(IBaseCommand command)
         {
-            foreach (KeyValuePair<CommandInput, IBaseCommand> pair in prefabs)
+            foreach (IBaseCommand existingCommand in commands)
             {
-                IBaseCommand existingPrefab = pair.Value;
-                if (existingPrefab.Path == prefab.Path && existingPrefab.GetType() == prefab.GetType())
+                if (existingCommand.Path.Equals(command.Path, StringComparison.OrdinalIgnoreCase))
                 {
-                    return;
+                    throw new Exception($"Command with path '{command.Path.ToString()}'({command.GetType()}) already exists");
                 }
             }
 
-            CommandInput path = new CommandInput(prefab.Path);
-            prefabs[path] = prefab;
+            commands.Add(command);
         }
     }
 }

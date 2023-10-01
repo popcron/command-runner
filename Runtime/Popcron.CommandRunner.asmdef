@@ -1,7 +1,10 @@
 {
     "name": "Popcron.CommandRunner",
     "rootNamespace": "Popcron.CommandRunner",
-    "references": [],
+    "references": [
+        "GUID:357d3aeabd5a6d34099dab7c035003ec",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

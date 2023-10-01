@@ -1,89 +1,62 @@
 #nullable enable
 using System;
+using System.Collections.Generic;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace Popcron.CommandRunner
 {
-    public class MethodCommand : IAsyncCommand
+    public readonly struct MethodCommand : ICommand
     {
-        private Action? method;
-        private MethodBase? methodBase;
-        private Func<Result>? methodWithResult;
-        private Func<Task<Result>>? methodWithTaskResult;
+        private readonly Action? action;
+        private readonly MethodBase? staticMethod;
+        private readonly Func<object?>? methodWithResult;
+        private readonly string path;
 
-        public string Path { get; }
+        public ReadOnlySpan<char> Path => path.AsSpan();
+        public IEnumerable<Type> Parameters => Array.Empty<Type>();
 
-        public MethodCommand(string path, Action method)
+        public MethodCommand(string path, Action action)
         {
-            Path = path;
-            this.method = method;
+            this.path = path;
+            this.action = action;
+            this.staticMethod = null;
+            this.methodWithResult = null;
         }
 
-        public MethodCommand(string path, MethodBase methodBase)
+        public MethodCommand(string path, MethodBase staticMethod)
         {
-            Path = path;
-            this.methodBase = methodBase;
+            this.path = path;
+            this.action = null;
+            this.staticMethod = staticMethod;
+            this.methodWithResult = null;
         }
 
-        public MethodCommand(string path, Func<Result> methodWithResult)
+        public MethodCommand(string path, Func<object?> methodWithResult)
         {
-            Path = path;
+            this.path = path;
+            this.action = null;
+            this.staticMethod = null;
             this.methodWithResult = methodWithResult;
         }
 
-        public MethodCommand(string path, Func<Task<Result>> methodWithTaskResult)
+        object? ICommand.Run(ExecutionInput input)
         {
-            Path = path;
-            this.methodWithTaskResult = methodWithTaskResult;
-        }
-
-        public Result? Run(Context context)
-        {
-            if (methodWithResult is not null)
+            if (action != null)
             {
-                return methodWithResult();
-            }
-            else if (method is not null)
-            {
-                method();
+                action.Invoke();
                 return null;
             }
-            else if (methodBase is not null)
+            else if (staticMethod != null)
             {
-                object result = methodBase.Invoke(null, null);
-                if (result is Result)
-                {
-                    return (Result)result;
-                }
-                else if (result is not null)
-                {
-                    return new Result(result);
-                }
-                else
-                {
-                    return null;
-                }
+                return staticMethod.Invoke(null, null);
             }
-            else if (methodWithTaskResult is not null)
+            else if (methodWithResult != null)
             {
-                throw new Exception("Cannot run a method with a task result synchronously. Use RunAsync()");
+                return methodWithResult.Invoke();
             }
             else
             {
                 throw new Exception("No method was found to run.");
-            }
-        }
-
-        public async Task<Result?> RunAsync(Context context)
-        {
-            if (methodWithTaskResult is not null)
-            {
-                return await methodWithTaskResult();
-            }
-            else
-            {
-                return Run(context);
             }
         }
     }

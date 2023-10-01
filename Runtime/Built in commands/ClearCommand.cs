@@ -1,13 +1,22 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 namespace Popcron.CommandRunner
 {
-    public readonly struct ClearCommand : ICommand, IDescription
+    [RegisterIntoSingleton]
+    public readonly struct ClearCommand : ICommand, ICommandInformation
     {
-        public string Path => "clear";
-        public string Description => "Clears the debug console.";
+        ReadOnlySpan<char> IBaseCommand.Path => "clear";
+        IEnumerable<Type> IBaseCommand.Parameters => Array.Empty<Type>();
 
-        public Result Run(Context parameters)
+        void ICommandInformation.Append(StringBuilder stringBuilder)
+        {
+            stringBuilder.Append("Clears the console.");
+        }
+
+        object ICommand.Run(ExecutionInput context)
         {
             Debug.ClearDeveloperConsole();
             return null;

@@ -1,16 +1,23 @@
 using System;
-using UnityEngine;
+using System.Collections.Generic;
+using System.Text;
 
 namespace Popcron.CommandRunner
 {
-    public readonly struct TimeCommand : ICommand
+    [RegisterIntoSingleton]
+    public readonly struct TimeCommand : ICommand, ICommandInformation
     {
-        public string Path => "time";
+        ReadOnlySpan<char> IBaseCommand.Path => "time";
+        IEnumerable<Type> IBaseCommand.Parameters => Array.Empty<Type>();
 
-        public Result Run(Context parameters)
+        void ICommandInformation.Append(StringBuilder stringBuilder)
         {
-            Debug.Log(DateTime.Now.ToString());
-            return null;
+            stringBuilder.Append("The current time.");
+        }
+
+        object ICommand.Run(ExecutionInput context)
+        {
+            return DateTime.Now;
         }
     }
 }

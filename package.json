@@ -13,15 +13,14 @@
   },
   "samples": [
     {
-      "displayName": "In game console",
-      "description": "Drag and drop the in game console prefab into the scene.",
+      "displayName": "In game console prefab",
+      "description": "Drag and drop the in game console into the scene, using a Canvas and Unity UI components.",
       "path": "Samples~/In Game Console"
-    },
-    {
-      "displayName": "Command loader",
-      "description": "Automatically registers ICommand declarations and static methods with a [Command] attribute to the command runner library.",
-      "path": "Samples~/Command Loader"
     }
   ],
-  "unity": "2021.1"
+  "unity": "2021.1",
+  "dependencies": {
+    "com.popcron-games.typecache": "1.1.0",
+    "com.cysharp.unitask": "2.4.1"
+  }
 }
