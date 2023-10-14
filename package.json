@@ -31,7 +31,6 @@
   "unity": "2020.3",
   "dependencies": {
     "com.popcron-games.typecache": "1.2.0",
-    "com.cysharp.unitask": "2.4.1",
-    "com.unity.quicksearch": "2.0.0"
+    "com.cysharp.unitask": "2.4.1"
   }
 }
