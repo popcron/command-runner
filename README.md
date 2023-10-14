@@ -4,7 +4,7 @@
 # Quick installation
 1. Add this url to your packages manifest:
 ```json
-https://github.com/popcron-games/command-runner.git
+https://github.com/popcron/command-runner.git
 ```
 2. Import the in game console and command loader samples into your project:
 ![image](https://user-images.githubusercontent.com/23342532/193724912-9387fc29-6415-42fb-838d-d40682175d58.png)
