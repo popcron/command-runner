@@ -1,7 +1,7 @@
 {
   "name": "com.popcron.command-runner",
   "displayName": "Popcron Command Runner",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A utility that parses text into commands and executes its code.",
   "keywords": [
     "console",
@@ -21,6 +21,11 @@
       "displayName": "Required .dll plugins",
       "description": "Required .dll to access ReadOnlySpan<> type if needed.",
       "path": "Samples~/Required .dll plugins"
+    },
+    {
+      "displayName": "QuickSearch integration",
+      "description": "Integration with QuickSearch package as a sample, because depending on the Unity version its either a UPM package or built-in",
+      "path": "Samples~/Search provider"
     }
   ],
   "unity": "2020.3",
