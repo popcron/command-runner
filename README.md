@@ -1,8 +1,9 @@
 # Command Runner
  A library that gives you the tools to parse user text to run commands!
  
-# Quick installation
-1. Add this url to your packages manifest:
+### Dependencies and Installation
+1. [UniTask](https://github.com/Cysharp/UniTask) and [TypeCache](https://github.com/popcron-games/com.popcron-games.typecache) are dependencies, make sure these are installed
+1. Add this url to your packages manifest
 ```json
 https://github.com/popcron/command-runner.git
 ```
