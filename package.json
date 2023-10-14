@@ -16,11 +16,17 @@
       "displayName": "In game console prefab",
       "description": "Drag and drop the in game console into the scene, using a Canvas and Unity UI components.",
       "path": "Samples~/In Game Console"
+    },
+    {
+      "displayName": "Required .dll plugins",
+      "description": "Required .dll to access ReadOnlySpan<> type if needed.",
+      "path": "Samples~/Required .dll plugins"
     }
   ],
-  "unity": "2021.1",
+  "unity": "2020.3",
   "dependencies": {
-    "com.popcron-games.typecache": "1.1.0",
-    "com.cysharp.unitask": "2.4.1"
+    "com.popcron-games.typecache": "1.2.0",
+    "com.cysharp.unitask": "2.4.1",
+    "com.unity.quicksearch": "2.0.0"
   }
 }

@@ -23,7 +23,12 @@ namespace Popcron.CommandLoader
 
         static CommandLibraryLoader()
         {
-            TryToLoad();
+#if UNITY_EDITOR
+            EditorApplication.delayCall += () =>
+            {
+                TryToLoad();
+            };
+#endif
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]

@@ -4,14 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
-using UnityEngine;
 
 namespace Popcron.CommandRunner
 {
     [RegisterIntoSingleton]
     public readonly struct SearchCommand : IAsyncCommand, ICommandInformation
     {
-        ReadOnlySpan<char> IBaseCommand.Path => "search";
+        ReadOnlySpan<char> IBaseCommand.Path => "search".AsSpan();
         IEnumerable<Type> IBaseCommand.Parameters
         {
             get
@@ -57,9 +56,22 @@ namespace Popcron.CommandRunner
             StringBuilder sb = new StringBuilder();
             foreach (IBaseCommand command in Search(search.AsSpan(), library))
             {
-                sb.Append(command.Path);
+                int length = command.Path.Length;
+                for (int i = 0; i < length; i++)
+                {
+                    sb.Append(command.Path[i]);
+                }
+
                 sb.Append(" = ");
-                command.AppendBasicInformation(sb);
+                if (command is ICommandInformation information)
+                {
+                    information.Append(sb);
+                }
+                else
+                {
+                    sb.Append(command.GetType().FullName);
+                }
+
                 sb.AppendLine();
 
                 double elapsed = (DateTime.Now - now).TotalSeconds;

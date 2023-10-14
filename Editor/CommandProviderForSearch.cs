@@ -1,11 +1,10 @@
 #nullable enable
-#if UNITY_EDITOR
 using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Unity.QuickSearch;
 using UnityEditor;
-using UnityEditor.Search;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -108,9 +107,15 @@ namespace Popcron.CommandRunner
                 return Array.Empty<SearchItem>();
             }
 
+            ReadOnlySpan<char> searchText = context.searchText.AsSpan();
+            if (!string.IsNullOrEmpty(context.filterId))
+            {
+                searchText = searchText.Slice(context.filterId.Length);
+            }
+
             HashSet<SearchItem> foundItems = new HashSet<SearchItem>();
             SearchCommand search = new SearchCommand();
-            foreach (IBaseCommand command in search.Search(context.searchText.AsSpan(), Library.Singleton))
+            foreach (IBaseCommand command in search.Search(searchText, Library.Singleton))
             {
                 SearchItem item = provider.CreateItem(context, command.Path.ToString(), -1, null, null, null, command);
                 if (command is ICommandInformation commandInfo)
@@ -193,7 +198,7 @@ namespace Popcron.CommandRunner
                 {
                     Close();
                 }
-            }     
+            }
             else if (e.type == EventType.KeyDown)
             {
                 if (e.keyCode == KeyCode.BackQuote)
@@ -231,7 +236,6 @@ namespace Popcron.CommandRunner
         {
             SceneView.duringSceneGui += DuringSceneGUI;
             EditorApplication.hierarchyWindowItemOnGUI += HierarchyWindowItemOnGUI;
-            EditorApplication.projectWindowItemInstanceOnGUI += ProjectWindowItemInstanceOnGUI;
             EditorApplication.projectWindowItemOnGUI += ProjectWindowItemOnGUI;
         }
 
@@ -273,4 +277,3 @@ namespace Popcron.CommandRunner
         }
     }
 }
-#endif

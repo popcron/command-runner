@@ -1,10 +1,13 @@
 #nullable enable
 using System;
+using System.Text;
 
 namespace Popcron.CommandRunner
 {
     public readonly struct InputParameters : IEquatable<InputParameters>
     {
+        private static readonly StringBuilder builder = new StringBuilder();
+
         public readonly string?[]? pieces;
 
         public bool IsEmpty => pieces is null || pieces.Length == 0;
@@ -25,7 +28,30 @@ namespace Popcron.CommandRunner
             }
             else 
             {
-                return string.Join(' ', pieces);
+                builder.Clear();
+                if (pieces != null)
+                {
+                    int length = pieces.Length;
+                    for (int i = 0; i < length; i++)
+                    {
+                        string? p = pieces[i];
+                        if (p != null)
+                        {
+                            builder.Append(p);
+                        }
+                        else
+                        {
+                            builder.Append("null");
+                        }
+
+                        if (i < length - 1)
+                        {
+                            builder.Append(" ");
+                        }
+                    }
+                }
+
+                return builder.ToString();
             }
         }
 

@@ -10,7 +10,7 @@ namespace Popcron.CommandRunner
     {
         private static readonly StringBuilder builder = new StringBuilder();
 
-        ReadOnlySpan<char> IBaseCommand.Path => "info";
+        ReadOnlySpan<char> IBaseCommand.Path => "info".AsSpan();
         IEnumerable<Type> IBaseCommand.Parameters => Array.Empty<Type>();
 
         void ICommandInformation.Append(StringBuilder stringBuilder)

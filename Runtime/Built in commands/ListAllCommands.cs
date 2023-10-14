@@ -9,7 +9,7 @@ namespace Popcron.CommandRunner
     {
         private static readonly StringBuilder sb = new StringBuilder();
 
-        ReadOnlySpan<char> IBaseCommand.Path => "ls commands";
+        ReadOnlySpan<char> IBaseCommand.Path => "ls commands".AsSpan();
         IEnumerable<Type> IBaseCommand.Parameters => Array.Empty<Type>();
 
         void ICommandInformation.Append(StringBuilder stringBuilder)
@@ -22,7 +22,12 @@ namespace Popcron.CommandRunner
             sb.Clear();
             foreach (IBaseCommand command in context.library.Commands)
             {
-                sb.Append(command.Path);
+                int length = command.Path.Length;
+                for (int i = 0; i < length; i++)
+                {
+                    sb.Append(command.Path[i]);
+                }
+
                 sb.Append(" = ");
                 if (command is ICommandInformation information)
                 {
